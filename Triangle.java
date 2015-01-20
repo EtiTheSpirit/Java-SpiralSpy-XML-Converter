@@ -7,7 +7,9 @@ public class Triangle {
 	 * Utilizing the last position, it can be "chained" (called multiple times) with very little difficulty.
 	 */
 	public static double[] getAll(String triSeg, int StartFind) {
-		StartFind = Math.abs(StartFind);
+		if (StartFind > 15) {
+			StartFind -= 15;
+		}
 		double x1 = 0.0;
 		double y1 = 0.0;
 		double z1 = 0.0;
@@ -19,69 +21,60 @@ public class Triangle {
 		double z3 = 0.0;
 		double end = 0.0;
 		//Variables defined.
+		StringManipulation string = new StringManipulation();
 		
-		StringManipulation str = new StringManipulation();
-		int FirstPos = str.find(triSeg, "<v1>", StartFind);
-		int firstCommaPos = str.find(triSeg, ", ", FirstPos+4);
+		int V1Start = string.find(triSeg, "<v1>", StartFind);
+		int V1End = string.find(triSeg, "</v1>", StartFind);
 		
-		String X1 = triSeg.substring(FirstPos+4, firstCommaPos);
+		String V1 = triSeg.substring(V1Start, V1End);
+		V1 = V1.replace("<v1>", "");
+		String[] xyz1 = V1.split(", ");
 		
-		int secondCommaPos = str.find(triSeg, ", ", firstCommaPos+1);
+		for (int i = 0; i < xyz1.length; i++) {
+			if (i == 0) {
+				x1 = Double.parseDouble(xyz1[i]);
+			} else if (i == 1) {
+				z1 = Double.parseDouble(xyz1[i]);
+			} else if (i == 2) {
+				y1 = Double.parseDouble(xyz1[i]);
+			}
+		}
 		
-		String Y1 = triSeg.substring(firstCommaPos+2, secondCommaPos);
+		int V2Start = string.find(triSeg, "<v2>", V1End);
+		int V2End = string.find(triSeg, "</v2>", V1End);
 		
-		int lastSetPos = str.find(triSeg, "</v1>", secondCommaPos-2);
+		String V2 = triSeg.substring(V2Start, V2End);
+		V2 = V2.replace("<v2>", "");
+		String[] xyz2 = V2.split(", ");
 		
-		String Z1 = triSeg.substring(secondCommaPos+2, lastSetPos);
+		for (int i = 0; i < xyz2.length; i++) {
+			if (i == 0) {
+				x2 = Double.parseDouble(xyz2[i]);
+			} else if (i == 1) {
+				z2 = Double.parseDouble(xyz2[i]);
+			} else if (i == 2) {
+				y2 = Double.parseDouble(xyz2[i]);
+			}
+		}
 		
-		x1 = Float.parseFloat(X1);//X Z Y -- DO NOT EDIT (It's not X Y Z!)
-		y1 = Float.parseFloat(Z1);
-		z1 = Float.parseFloat(Y1);
+		int V3Start = string.find(triSeg, "<v3>", V2End);
+		int V3End = string.find(triSeg, "</v3>", V2End);
 		
-		//V1 Complete. Starting V2
-		FirstPos = str.find(triSeg, "<v2>", lastSetPos);
-		firstCommaPos = str.find(triSeg, ", ", FirstPos+("<v2>").length());
+		String V3 = triSeg.substring(V3Start, V3End);
+		V3 = V3.replace("<v3>", "");
+		String[] xyz3 = V3.split(", ");
 		
+		for (int i = 0; i < xyz3.length; i++) {
+			if (i == 0) {
+				x3 = Double.parseDouble(xyz3[i]);
+			} else if (i == 1) {
+				z3 = Double.parseDouble(xyz3[i]);
+			} else if (i == 2) {
+				y3 = Double.parseDouble(xyz3[i]);
+			}
+		}
 		
-		String X2 = triSeg.substring(FirstPos+4, firstCommaPos);
-		
-		//System.out.println(X2);
-		
-		secondCommaPos = str.find(triSeg, ", ", firstCommaPos+1);
-		
-		String Y2 = triSeg.substring(firstCommaPos+2, secondCommaPos);
-		
-		//System.out.println(Y2);
-		
-		lastSetPos = str.find(triSeg, "</v2>", secondCommaPos-2);
-		
-		String Z2 = triSeg.substring(secondCommaPos+2, lastSetPos);
-		
-		//System.out.println(Z2);
-		
-		x2 = Float.parseFloat(X2);//X Z Y -- DO NOT EDIT (It's not X Y Z!)
-		y2 = Float.parseFloat(Z2);
-		z2 = Float.parseFloat(Y2);
-		//Got V2. Starting V3
-		FirstPos = str.find(triSeg, "<v3>", lastSetPos);
-		firstCommaPos = str.find(triSeg, ", ", FirstPos+("<v3>").length());
-		
-		String X3 = triSeg.substring(FirstPos+4, firstCommaPos);
-		
-		secondCommaPos = str.find(triSeg, ", ", firstCommaPos+1);
-		
-		String Y3 = triSeg.substring(firstCommaPos+2, secondCommaPos);
-		
-		lastSetPos = str.find(triSeg, "</v3>", secondCommaPos-2);
-		
-		String Z3 = triSeg.substring(secondCommaPos+2, lastSetPos);
-		
-		x3 = Float.parseFloat(X3);//X Z Y -- DO NOT EDIT (It's not X Y Z!)
-		y3 = Float.parseFloat(Z3);
-		z3 = Float.parseFloat(Y3);
-		
-		//end = lastSetPos;
-		end = str.find(triSeg, "</triangle>", lastSetPos)+10;
+		end = V3End;
 		
 		double[] V3Table = {x1, y1, z1, x2, y2, z2, x3, y3, z3, end};
 		return V3Table;
