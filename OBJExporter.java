@@ -14,6 +14,8 @@ public class OBJExporter {
 	static double z2;
 	static double z3;
 	
+	static StringManipulation string = new StringManipulation();
+	
 	public static String getInput(double[][] tris, int[] indices, int triLen) {
 		String obj = "#Brought to you by XanthicDragon\n\ng Model\n\n";
 		/*
@@ -23,8 +25,6 @@ public class OBJExporter {
 		 */
 		
 		int indLen = indices.length;
-		
-		int TC = (triLen+indLen)*3;
 		
 		/*
 		 * IDEA:
@@ -83,6 +83,7 @@ public class OBJExporter {
 		obj = obj + "\nusemtl null\n\n";
 		System.out.println(f+" indexed triangles");
 		System.out.println(g-f+" non-indexed triangles");
+		TC = string.match(obj, "v");
 		for (int i = 0; i <= TC; i++) {
 			if (i % 3 == 0 && i > 0) {
 				obj = obj + "f "+(i-2)+" "+(i-1)+" "+(i-0)+"\n";
