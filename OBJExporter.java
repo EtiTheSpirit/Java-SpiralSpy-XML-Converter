@@ -24,6 +24,8 @@ public class OBJExporter {
 		
 		int indLen = indices.length;
 		
+		int TC = (triLen+indLen)*3;
+		
 		/*
 		 * IDEA:
 		 * Using values of indices, I can index certain triangles.
@@ -35,12 +37,10 @@ public class OBJExporter {
 		
 		int f = 0;
 		int g = 0;
-		int q = 0;
 		for (int i = 0; i < triLen; i++) {
 			try {
-				if (indices[i] != 0) {
+				if (i < indLen) {
 					f++;
-					q++;
 					double[] set = tris[indices[i]];
 					x1 = set[0];
 					y1 = set[1];
@@ -59,7 +59,7 @@ public class OBJExporter {
 					obj = obj + "v "+x3+" "+y3+" "+z3+"\n";
 				}
 			} finally {
-				double[] set = tris[q-i];
+				double[] set = tris[i];
 				x1 = set[0];
 				y1 = set[1];
 				z1 = set[2];
@@ -75,37 +75,15 @@ public class OBJExporter {
 				obj = obj + "v "+x1+" "+y1+" "+z1+"\n";
 				obj = obj + "v "+x2+" "+y2+" "+z2+"\n";
 				obj = obj + "v "+x3+" "+y3+" "+z3+"\n";
-				q++;
 				g++;
 			}
 		}
 		
-		//TEST CODE BELOW
-		
-		/*for (int i = 0; i < triLen; i++) {
-			double[] set = tris[i];
-			x1 = set[0];
-			y1 = set[1];
-			z1 = set[2];
-			
-			x2 = set[3];
-			y2 = set[4];
-			z2 = set[5];
-			
-			x3 = set[6];
-			y3 = set[7];
-			z3 = set[8];
-			
-			obj = obj + "v "+x1+" "+y1+" "+z1+"\n";
-			obj = obj + "v "+x2+" "+y2+" "+z2+"\n";
-			obj = obj + "v "+x3+" "+y3+" "+z3+"\n";
-		}
-		*/
-		//END TEST CODE
-		
+
 		obj = obj + "\nusemtl null\n\n";
-		
-		for (int i = 0; i < (f-g)+(indLen)+(triLen*3); i++) {
+		System.out.println(f+" indexed triangles");
+		System.out.println(g-f+" non-indexed triangles");
+		for (int i = 0; i <= TC; i++) {
 			if (i % 3 == 0 && i > 0) {
 				obj = obj + "f "+(i-2)+" "+(i-1)+" "+(i-0)+"\n";
 			}
